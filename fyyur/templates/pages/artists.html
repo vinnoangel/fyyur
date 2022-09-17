@@ -1,0 +1,47 @@
+{% extends 'layouts/main.html' %}
+{% block title %}Fyyur | Artists{% endblock %}
+{% block content %}
+{% if artists %}
+	<ul class="items">
+		{% for artist in artists %}
+		<li>
+			<a href="/artists/{{ artist.id }}">
+				<i class="fas fa-users"></i>
+				<div class="item">
+					<h5>{{ artist.name }}</h5>
+				</div>
+			</a>
+			<button class="artist-delete-button btn btn-danger btn-sm" data-id="{{ artist.id }}">
+				<i class="fas fa-trash"></i>
+			</button>
+		</li>
+		<br>
+		{% endfor %}
+	</ul>
+{% else %}
+	<h3>No artist listed yet</h3>
+	<h3>
+		<a href="/artists/create"><button class="btn btn-warning btn-lg">Post a artist</button></a>
+	</h3>
+{% endif %}
+
+<script>
+	//delete artist
+	const artistDeleteBtns = document.querySelectorAll('.artist-delete-button');
+	for (let i = 0; i < artistDeleteBtns.length; i++) {
+	  const btn = artistDeleteBtns[i];
+	  btn.onclick = function(e) {
+		const artist_id = e.target.dataset['id'];
+		fetch('/artists/' + artist_id, {
+		  method: 'DELETE'
+		})
+		.then(function() {
+		  const item = e.target.parentElement;
+		  item.remove();
+		  location.reload();
+		})
+	  }
+	}
+</script>
+
+{% endblock %}
